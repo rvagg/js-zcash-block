@@ -1,0 +1,26 @@
+{
+  "name": "zcash-block",
+  "version": "1.0.0",
+  "description": "A Zcash block interface and decoder for JavaScript",
+  "main": "zcash-block.js",
+  "dependencies": {
+    "multihashing-async": "~0.7.0"
+  },
+  "devDependencies": {
+    "jsdoc4readme": "~1.2.1"
+  },
+  "scripts": {
+    "test": "node test.js",
+    "docs": "jsdoc4readme --readme *.js classes/*.js"
+  },
+  "author": "Rod <rod@vagg.org> (http://r.va.gg/)",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvagg/js-zcash-block.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rvagg/js-zcash-block/issues"
+  },
+  "homepage": "https://github.com/rvagg/js-zcash-block#readme"
+}
