@@ -1,4 +1,5 @@
 module.exports.ZcashBlock = require('./Block')
+module.exports.ZcashBlockHeaderOnly = require('./Block').ZcashBlockHeaderOnly
 module.exports.ZcashCompressedG1 = require('./CompressedG1')
 module.exports.ZcashCompressedG2 = require('./CompressedG2')
 module.exports.ZcashFq = require('./Fq')

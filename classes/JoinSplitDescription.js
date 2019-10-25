@@ -117,13 +117,13 @@ std::array<ZCNoteEncryption::Ciphertext, 2> ciphertexts
 // custom serialization occurs @ https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L276-L286
 // and https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L166-L177
 // typedef std::array<unsigned char, GROTH_PROOF_SIZE> GrothProof;
-ZcashJoinSplitDescription._customDecodeSproutProof = async function (decoder, properties, state) {
+ZcashJoinSplitDescription._customDecodeSproutProof = function (decoder, properties, state) {
   const useGroth = state.fOverwintered && state.nVersion >= SAPLING_TX_VERSION
   // if useGroth, unserialize as libzcash::GrothProof, otherwise as libzcash::PHGRProof
   if (useGroth) {
-    properties.push(await decoder.readType('libzcash::GrothProof'))
+    properties.push(decoder.readType('libzcash::GrothProof'))
   } else {
-    properties.push(await decoder.readType('PHGRProof'))
+    properties.push(decoder.readType('PHGRProof'))
   }
 }
 

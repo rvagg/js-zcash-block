@@ -5,7 +5,7 @@ const assert = require('assert')
 const ZcashBlock = require('./')
 
 async function test () {
-  // the blocks in ./fixtures are a random(ish) sample of blocks from the begining (including the
+  // the blocks in ./fixtures are a random(ish) sample of blocks from the beginning (including the
   // genesis block) to the date of authoring (August 2019), so they cover a good range of formats
 
   const fixtureBlocks = (await fs.readdir(path.join(__dirname, 'fixtures')))
@@ -18,7 +18,7 @@ async function test () {
     const block = Buffer.from(await fs.readFile(path.join(__dirname, 'fixtures', `${blockHash}.hex`), 'utf8'), 'hex')
     const blockData = require(path.join(__dirname, 'fixtures', `${blockHash}.json`))
 
-    const decoded = await ZcashBlock.decode(block)
+    const decoded = ZcashBlock.decode(block)
     const serializable = decoded.toSerializable()
     // console.log('decoded', JSON.stringify(serializable, null, 2))
 

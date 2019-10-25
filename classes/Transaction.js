@@ -1,4 +1,4 @@
-const multihashing = require('multihashing-async')
+const multihashing = require('multihashing')
 const { decodeProperties, toHashHex, COIN } = require('./class-utils')
 
 const OVERWINTER_TX_VERSION = 3
@@ -144,29 +144,29 @@ ZcashTransaction._customDecodeExpiryHeight = function (decoder, properties, stat
   properties.push(expiryHeight)
 }
 
-ZcashTransaction._customDecodeBalanceAndShielded = async function (decoder, properties, state) {
+ZcashTransaction._customDecodeBalanceAndShielded = function (decoder, properties, state) {
   let valueBalance = null
   let shieldedSpend = null
   let shieldedOutput = null
   if (isSaplingV4(state)) {
     valueBalance = decoder.readBigInt64LE() // CAmount
-    shieldedSpend = await decoder.readType('std::vector<SpendDescription>')
-    shieldedOutput = await decoder.readType('std::vector<OutputDescription>')
+    shieldedSpend = decoder.readType('std::vector<SpendDescription>')
+    shieldedOutput = decoder.readType('std::vector<OutputDescription>')
   }
   properties.push(valueBalance)
   properties.push(shieldedSpend)
   properties.push(shieldedOutput)
 }
 
-ZcashTransaction._customDecodeJoinSplit = async function (decoder, properties, state) {
+ZcashTransaction._customDecodeJoinSplit = function (decoder, properties, state) {
   let joinSplits = []
   let joinSplitPubKey
   let joinSplitSig
   if (state.nVersion >= 2) {
-    joinSplits = await decoder.readType('std::vector<JSDescription>')
+    joinSplits = decoder.readType('std::vector<JSDescription>')
     if (joinSplits.length > 0) {
-      joinSplitPubKey = await decoder.readType('uint256')
-      joinSplitSig = await decoder.readType('joinsplit_sig_t')
+      joinSplitPubKey = decoder.readType('uint256')
+      joinSplitSig = decoder.readType('joinsplit_sig_t')
     }
   }
   properties.push(joinSplits)
@@ -174,23 +174,23 @@ ZcashTransaction._customDecodeJoinSplit = async function (decoder, properties, s
   properties.push(joinSplitSig)
 }
 
-ZcashTransaction._customDecodeBindingSig = async function (decoder, properties, state) {
+ZcashTransaction._customDecodeBindingSig = function (decoder, properties, state) {
   const shieldedSpend = properties[8]
   const shieldedOutput = properties[9]
   let bindingSig
   if (isSaplingV4(state) && !(shieldedSpend.length === 0 && shieldedOutput.length === 0)) {
-    bindingSig = await decoder.readType('binding_sig_t')
+    bindingSig = decoder.readType('binding_sig_t')
   }
   properties.push(bindingSig)
 }
 
-ZcashTransaction._customDecodeHash = async function (decoder, properties, state) {
+ZcashTransaction._customDecodeHash = function (decoder, properties, state) {
   const start = state.transactionStartPos
   const end = decoder.currentPosition()
   const hashBytes = decoder.absoluteSlice(start, end - start)
   // double hash
-  let digest = await multihashing.digest(hashBytes, 'sha2-256')
-  digest = await multihashing.digest(digest, 'sha2-256')
+  let digest = multihashing.digest(hashBytes, 'sha2-256')
+  digest = multihashing.digest(digest, 'sha2-256')
   properties.push(digest)
 }
 

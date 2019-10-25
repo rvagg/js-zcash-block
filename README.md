@@ -15,6 +15,7 @@ Running `JSON.stringify()` on a decoded `ZcashBlock` instance should result in t
 ### Contents
 
  * [`ZcashBlock.decode()`](#ZcashBlock__decode____)
+ * [`ZcashBlock.decodeBlockHeaderOnly()`](#ZcashBlock__decodeBlockHeaderOnly____)
  * [`class ZcashBlock`](#ZcashBlock)
    * [Constructor: `ZcashBlock(version, previousblockhash, merkleroot, finalsaplingroot, time, bits, nonce, solution, hash, transactions)`](#ZcashBlock_new)
  * [`ZcashBlock#toSerializable()`](#ZcashBlock_toSerializable)
@@ -57,6 +58,17 @@ Running `JSON.stringify()` on a decoded `ZcashBlock` instance should result in t
 Decode a [`ZcashBlock`](#ZcashBlock) from the raw bytes of the block.
 
 Can be used directly as `require('zcash-block').decode()`.
+
+**Parameters:**
+
+* **`buffer`** _(`Uint8Array|Buffer`)_: the raw bytes of the block to be decoded.
+
+<a name="ZcashBlock__decodeBlockHeaderOnly____"></a>
+### `ZcashBlock.decodeBlockHeaderOnly()`
+
+Decode only the header section of a [`ZcashBlock`](#ZcashBlock) from the raw bytes of the block. This method will exclude the transactions.
+
+Can be used directly as `require('zcash-block').decodeBlockHeaderOnly()`.
 
 **Parameters:**
 

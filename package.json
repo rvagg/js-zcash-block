@@ -4,7 +4,7 @@
   "description": "A Zcash block interface and decoder for JavaScript",
   "main": "zcash-block.js",
   "dependencies": {
-    "multihashing-async": "~0.7.0"
+    "multihashing": "~0.3.3"
   },
   "devDependencies": {
     "jsdoc4readme": "~1.3.0",

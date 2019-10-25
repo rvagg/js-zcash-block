@@ -26,8 +26,9 @@ function readCompactSize (buf, offset) {
     return [nSizeRet, 5]
   } else {
     // shouldn't need this, no way are we going to encounter 64-bit ints for decode sizes here
-    const nSizeRet = buf.readBigInt64LE(offset)
-    throw new Error(`readCompactSize() size too large (probably ${nSizeRet})`)
+    // const nSizeRet = buf.readBigInt64LE(offset)
+    // throw new Error(`readCompactSize() size too large (probably ${nSizeRet})`)
+    throw new Error('readCompactSize() size too large')
     /*
     nSizeRet = ser_readdata64(is);
     if (nSizeRet < 0x100000000ULL)
@@ -44,7 +45,23 @@ function readCompactSize (buf, offset) {
  * @param {Uint8Array|Buffer} buffer - the raw bytes of the block to be decoded.
  * @name ZcashBlock.decode()
  */
-async function decodeBlock (buf) {
+function decodeBlock (buf) {
+  return _decodeBlock(buf, 'CBlockHeader')
+}
+
+/**
+ * Decode only the header section of a {@link ZcashBlock} from the raw bytes of the block. This method will exclude the transactions.
+ *
+ * Can be used directly as `require('zcash-block').decodeBlockHeaderOnly()`.
+ *
+ * @param {Uint8Array|Buffer} buffer - the raw bytes of the block to be decoded.
+ * @name ZcashBlock.decodeBlockHeaderOnly()
+ */
+function decodeBlockHeaderOnly (buf) {
+  return _decodeBlock(buf, 'CBlockHeader__Only')
+}
+
+function _decodeBlock (buf, type) {
   let pos = 0
   const state = {}
 
@@ -72,7 +89,19 @@ async function decodeBlock (buf) {
     },
 
     readBigInt64LE () {
-      const i = buf.readBigInt64LE(pos)
+      // not browser friendly, need to simulate:
+      // const i = buf.readBigInt64LE(pos)
+
+      // nicer BigInt version:
+      /*
+      const lo = BigInt(buf.readInt32LE(pos))
+      const hi = BigInt(buf.readInt32LE(pos + 4))
+      const i = (BigInt(2) ** BigInt(32)) * hi + lo
+      */
+      // risky plain, but currently (2019) browser-safe version
+      const lo = buf.readInt32LE(pos)
+      const hi = buf.readInt32LE(pos + 4)
+      const i = (2 ** 32) * hi + lo
       pos += 8
       return i
     },
@@ -99,7 +128,7 @@ async function decodeBlock (buf) {
       return decoder.slice(decoder.readCompactInt())
     },
 
-    async readType (type) {
+    readType (type) {
       // console.log('readType', type, pos)
 
       // a class we know
@@ -169,7 +198,7 @@ async function decodeBlock (buf) {
         const size = decoder.readCompactInt()
         const list = []
         for (let i = 0; i < size; i++) {
-          list.push(await decoder.readType(vectorType))
+          list.push(decoder.readType(vectorType))
         }
         return list
       }
@@ -182,7 +211,7 @@ async function decodeBlock (buf) {
         const arrayType = arrayDesc[1]
         const array = []
         for (let i = 0; i < arraySize; i++) {
-          array.push(await decoder.readType(arrayType))
+          array.push(decoder.readType(arrayType))
         }
         return array
       }
@@ -206,18 +235,15 @@ async function decodeBlock (buf) {
       }
     },
 
-    async readClass (clazz) {
+    readClass (clazz) {
       const properties = []
       for (const property of clazz._propertiesDescriptor) {
         const type = property.type
         // custom decoder, something a bit fancier than we can handle
         if (type.startsWith('_customDecode') && typeof clazz[type] === 'function') {
-          const p = clazz[type](decoder, properties, state)
-          if (p && typeof p.then === 'function') {
-            await p
-          }
+          clazz[type](decoder, properties, state)
         } else {
-          properties.push(await decoder.readType(type))
+          properties.push(decoder.readType(type))
         }
       }
 
@@ -226,8 +252,9 @@ async function decodeBlock (buf) {
     }
   }
 
-  const block = await decoder.readType('CBlockHeader')
+  const block = decoder.readType(type)
   return block
 }
 
 module.exports = decodeBlock
+module.exports.decodeBlockHeaderOnly = decodeBlockHeaderOnly

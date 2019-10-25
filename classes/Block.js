@@ -1,4 +1,4 @@
-const multihashing = require('multihashing-async')
+const multihashing = require('multihashing')
 const { decodeProperties, toHashHex } = require('./class-utils')
 
 const GENESIS_BITS = 0x1f07ffff
@@ -54,31 +54,39 @@ class ZcashBlock {
     this.hash = hash
     this.transactions = transactions
     this.size = size
-    this._difficulty = null
-  }
 
-  get difficulty () {
-    if (this._difficulty === null) {
-      const genesisTargetDifficulty = targetDifficulty(GENESIS_BITS)
-      const currentTargetDifficulty = targetDifficulty(this.bits)
-      this._difficulty = genesisTargetDifficulty / currentTargetDifficulty
-    }
-    return this._difficulty
+    let difficulty = null
+    Object.defineProperty(this, 'difficulty', {
+      enumerable: true,
+      get: function () {
+        if (difficulty === null) {
+          const genesisTargetDifficulty = targetDifficulty(GENESIS_BITS)
+          const currentTargetDifficulty = targetDifficulty(this.bits)
+          difficulty = genesisTargetDifficulty / currentTargetDifficulty
+        }
+        return difficulty
+      }
+    })
   }
 
   toJSON () {
     const obj = {
       hash: toHashHex(this.hash),
-      size: this.size,
       version: this.version,
       merkleroot: toHashHex(this.merkleroot),
       finalsaplingroot: toHashHex(this.finalsaplingroot),
-      tx: this.transactions && this.transactions.map((tx) => { return toHashHex(tx.hash) }),
       time: this.time,
       nonce: toHashHex(this.nonce),
       solution: this.solution.toString('hex'),
       bits: Number(this.bits).toString(16),
       difficulty: this.difficulty
+    }
+
+    if (this.transactions) {
+      obj.tx = this.transactions.map((tx) => { return toHashHex(tx.hash) })
+    }
+    if (this.size != null) {
+      obj.size = this.size
     }
 
     const previousblockhash = toHashHex(this.previousblockhash)
@@ -131,21 +139,40 @@ ZcashBlock._customDecoderMarkStart = function (decoder, properties, state) {
   state.blockStartPos = decoder.currentPosition()
 }
 
-ZcashBlock._customDecodeHash = async function (decoder, properties, state) {
+ZcashBlock._customDecodeHash = function (decoder, properties, state) {
   const start = state.blockStartPos
   const end = decoder.currentPosition()
   const hashBytes = decoder.absoluteSlice(start, end - start)
   // double hash
-  let digest = await multihashing.digest(hashBytes, 'sha2-256')
-  digest = await multihashing.digest(digest, 'sha2-256')
+  let digest = multihashing.digest(hashBytes, 'sha2-256')
+  digest = multihashing.digest(digest, 'sha2-256')
   properties.push(digest)
 }
 
-ZcashBlock._customDecodeSize = async function (decoder, properties, state) {
+ZcashBlock._customDecodeSize = function (decoder, properties, state) {
   const start = state.blockStartPos
   const end = decoder.currentPosition()
   const size = end - start
   properties.push(size)
 }
 
+class ZcashBlockHeaderOnly extends ZcashBlock {}
+ZcashBlockHeaderOnly._nativeName = 'CBlockHeader__Only'
+// properties is the same, minus the last two for transactions & size
+ZcashBlockHeaderOnly._propertiesDescriptor = decodeProperties(`
+_customDecoderMarkStart
+int32_t nVersion;
+uint256 hashPrevBlock;
+uint256 hashMerkleRoot;
+uint256 hashFinalSaplingRoot;
+uint32_t nTime;
+uint32_t nBits;
+uint256 nNonce;
+std::vector<unsigned char> nSolution;
+_customDecodeHash
+`)
+ZcashBlockHeaderOnly._customDecoderMarkStart = ZcashBlock._customDecoderMarkStart
+ZcashBlockHeaderOnly._customDecodeHash = ZcashBlock._customDecodeHash
+
 module.exports = ZcashBlock
+module.exports.ZcashBlockHeaderOnly = ZcashBlockHeaderOnly
