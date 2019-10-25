@@ -117,11 +117,11 @@ async function decodeBlock (buf) {
       } else if (type === 'libzcash::SaplingEncCiphertext') {
         // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/NoteEncryption.hpp#L20
         // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Zcash.h#L27
-        type = `std::array<unsigned char, 580>`
+        type = 'std::array<unsigned char, 580>'
       } else if (type === 'libzcash::SaplingOutCiphertext') {
         // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/NoteEncryption.hpp#L21
         // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Zcash.h#L28
-        type = `std::array<unsigned char, 80>`
+        type = 'std::array<unsigned char, 80>'
       } else if (type === 'spend_auth_sig_t') {
         // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L46
         type = 'std::array<unsigned char, 64>'
@@ -196,8 +196,7 @@ async function decodeBlock (buf) {
         case 'uint32_t':
           return decoder.readUInt32LE()
         case 'int64_t':
-          const b = decoder.readBigInt64LE()
-          return b
+          return decoder.readBigInt64LE()
         case 'uint256':
           return decoder.readHash()
         case 'compactSlice':
