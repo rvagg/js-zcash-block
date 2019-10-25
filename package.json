@@ -1,6 +1,6 @@
 {
   "name": "zcash-block",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A Zcash block interface and decoder for JavaScript",
   "main": "zcash-block.js",
   "dependencies": {
