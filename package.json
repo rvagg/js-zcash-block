@@ -12,7 +12,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "test": "npm run lint && node test.js",
+    "test": "npm run lint && node test/node.js",
     "docs": "jsdoc4readme --readme *.js classes/*.js"
   },
   "author": "Rod <rod@vagg.org> (http://r.va.gg/)",
