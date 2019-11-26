@@ -12,7 +12,9 @@
   },
   "scripts": {
     "lint": "standard",
-    "test": "npm run lint && node test/node.js",
+    "test:browser": "npx polendina --runner=bare-async --cleanup test/browser.js",
+    "test:node": "node test/node.js",
+    "test": "npm run lint && npm run test:node && npm run test:browser",
     "docs": "jsdoc4readme --readme *.js classes/*.js"
   },
   "author": "Rod <rod@vagg.org> (http://r.va.gg/)",
