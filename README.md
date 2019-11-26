@@ -1,5 +1,7 @@
 # Zcash block interface for JavaScript
 
+![CI](https://github.com/rvagg/js-zcash-block/workflows/CI/badge.svg?branch=master)
+
 [![NPM](https://nodei.co/npm/zcash-block.svg)](https://nodei.co/npm/zcash-block/)
 
 A collection of JavaScript classes representing the data contained within **[Zcash](https://z.cash/)** blocks along with a **decoder** for the binary Zcash block representation.
