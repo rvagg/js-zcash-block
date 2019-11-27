@@ -13,7 +13,7 @@
   "scripts": {
     "lint": "standard",
     "test:browser": "npx polendina --runner=bare-async --cleanup test/browser.js",
-    "test:node": "node test/node.js",
+    "test:node": "npx polendina-node bare-async test/node.js",
     "test": "npm run lint && npm run test:node && npm run test:browser",
     "docs": "jsdoc4readme --readme *.js classes/*.js"
   },

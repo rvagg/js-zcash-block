@@ -18,7 +18,11 @@ async function run () {
     })
   }))
 
-  return test(fixtures)
+  console.log('testing', fixtures.length, 'fixtures')
+  for (const { hash, block, data } of fixtures) {
+    console.log('testing', hash)
+    test(hash, block, data)
+  }
 }
 
 module.exports = run
