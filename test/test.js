@@ -7,6 +7,7 @@ const { ZcashBlock } = require('../')
 function cleanExpectedBlock (obj) {
   // clean up expected data, removing pieces we can't get without additional context
   delete obj.anchor // depends on past blocks
+  delete obj.chainhistoryroot // depends on the chain
   delete obj.chainwork // depends on the chain
   delete obj.confirmations // depends on chain context
   delete obj.height // depends on chain, although it may be discernable from the coinbase?
@@ -23,26 +24,22 @@ function roundDifficulty (obj) {
   return ret
 }
 
-/*
 function toMinimalExpected (obj) {
   const ret = Object.assign({}, obj)
   ret.tx = obj.tx.map((tx) => tx.txid)
   return ret
 }
-*/
 
 function verifyMinimalForm (decoded, expected) {
-  const serializableMin = decoded.toPorcelain('min')
-  const minimalExpected = serializableMin // toMinimalExpected(expected)
-  assert.deepStrictEqual(roundDifficulty(serializableMin), roundDifficulty(minimalExpected))
+  const porcelainMin = decoded.toPorcelain('min')
+  const minimalExpected = toMinimalExpected(expected)
+  assert.deepStrictEqual(roundDifficulty(porcelainMin), roundDifficulty(minimalExpected))
 }
 
-/*
 function verifyMaximalForm (decoded, expected) {
-  const serializable = decoded.toPorcelain()
-  assert.deepStrictEqual(roundDifficulty(serializable), roundDifficulty(expected))
+  const porcelain = decoded.toPorcelain()
+  assert.deepStrictEqual(roundDifficulty(porcelain), roundDifficulty(expected))
 }
-*/
 
 function test (hash, block, expected) {
   cleanExpectedBlock(expected)
@@ -56,7 +53,7 @@ function test (hash, block, expected) {
   // ---------------------------------------------------------------------------
   // test the serialized maximum form, where the `tx` array the full transaction
   // data, potentially huge
-  // verifyMaximalForm(decoded, expected)
+  verifyMaximalForm(decoded, expected)
 }
 
 module.exports = test

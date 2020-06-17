@@ -1,4 +1,4 @@
-const { decodeProperties } = require('./class-utils')
+const { decodeProperties } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash transaction joinsplit proof.
@@ -31,7 +31,7 @@ class ZcashPHGRProof {
    * @param {boolean} yLsb
    * @constructs ZCashPHGRProof
    */
-  constructor (gA, gAprime, gB, gBprime, gC, gCprime, gK, gH) {
+  constructor (gA, gAprime, gB, gBprime, gC, gCprime, gK, gH, rawBytes) {
     this.gA = gA
     this.gA = gAprime
     this.gB = gB
@@ -40,6 +40,11 @@ class ZcashPHGRProof {
     this.gC = gCprime
     this.gK = gK
     this.gH = gH
+    this.rawBytes = rawBytes
+  }
+
+  toString () {
+    return this.rawBytes.toString('hex')
   }
 }
 
@@ -49,6 +54,7 @@ class ZcashPHGRProof {
 ZcashPHGRProof._nativeName = 'PHGRProof'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Proof.hpp#L181-L188
 ZcashPHGRProof._decodePropertiesDescriptor = decodeProperties(`
+_customDecoderMarkStart
 CompressedG1 g_A;
 CompressedG1 g_A_prime;
 CompressedG2 g_B;
@@ -57,6 +63,18 @@ CompressedG1 g_C;
 CompressedG1 g_C_prime;
 CompressedG1 g_K;
 CompressedG1 g_H;
+_customDecodeRawBytes
 `)
+
+ZcashPHGRProof._customDecoderMarkStart = function (decoder, properties, state) {
+  state.proofStartPos = decoder.currentPosition()
+}
+
+ZcashPHGRProof._customDecodeRawBytes = function (decoder, properties, state) {
+  const start = state.proofStartPos
+  const end = decoder.currentPosition()
+  const rawBytes = decoder.absoluteSlice(start, end - start)
+  properties.push(rawBytes)
+}
 
 module.exports = ZcashPHGRProof

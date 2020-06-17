@@ -1,4 +1,4 @@
-const { decodeProperties, toHashHex } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash output description.
@@ -10,7 +10,7 @@ const { decodeProperties, toHashHex } = require('./class-utils')
  * @property {Uint8Array|Buffer} ephemeralKey - a 256-bit Jubjub public key
  * @property {Uint8Array|Buffer} encCiphertext - a 580 byte ciphertext component for the encrypted output note
  * @property {Uint8Array|Buffer} outCiphertext - a 80 byte ciphertext component for the encrypted output note
- * @property {Uint8Array|Buffer} zkproof - a GrothProof encoded directly as 192 bytes of binary data
+ * @property {Uint8Array|Buffer} proof - a GrothProof encoded directly as 192 bytes of binary data
  * @class
  */
 class ZcashOutputDescription {
@@ -24,16 +24,16 @@ class ZcashOutputDescription {
    * @param {Uint8Array|Buffer} ephemeralKey
    * @param {Uint8Array|Buffer} encCiphertext
    * @param {Uint8Array|Buffer} outCiphertext
-   * @param {Uint8Array|Buffer} zkproof
+   * @param {Uint8Array|Buffer} proof
    * @constructs ZcashOutputDescription
    */
-  constructor (cv, cm, ephemeralKey, encCiphertext, outCiphertext, zkproof) {
+  constructor (cv, cmu, ephemeralKey, encCiphertext, outCiphertext, proof) {
     this.cv = cv
-    this.cm = cm
+    this.cmu = cmu
     this.ephemeralKey = ephemeralKey
     this.encCiphertext = encCiphertext
     this.outCiphertext = outCiphertext
-    this.zkproof = zkproof
+    this.proof = proof
   }
 
   /**
@@ -43,11 +43,11 @@ class ZcashOutputDescription {
   toJSON () {
     return {
       cv: toHashHex(this.cv),
-      cm: toHashHex(this.cm),
+      cmu: toHashHex(this.cmu),
       ephemeralKey: toHashHex(this.ephemeralKey),
       encCiphertext: this.encCiphertext.toString('hex'),
       outCiphertext: this.outCiphertext.toString('hex'),
-      zkproof: this.zkproof.toString('hex')
+      proof: this.proof.toString('hex')
     }
   }
 }

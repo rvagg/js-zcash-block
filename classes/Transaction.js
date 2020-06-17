@@ -1,10 +1,12 @@
 const multihashing = require('multihashing')
-const { decodeProperties, toHashHex, COIN } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
+const { COIN } = require('./class-utils')
 
 const OVERWINTER_TX_VERSION = 3
 const SAPLING_TX_VERSION = 4
 const OVERWINTER_VERSION_GROUP_ID = 0x03C48270
 const SAPLING_VERSION_GROUP_ID = 0x892F2085
+const NULL_HASH = Buffer.alloc(32)
 
 /**
  * A class representation of a Zcash Transaction, multiple of which are contained within each {@link ZcashBlock}.
@@ -13,19 +15,19 @@ const SAPLING_VERSION_GROUP_ID = 0x892F2085
  *
  * @property {boolean} overwintered
  * @property {number} version
- * @property {number} versionGroupId
+ * @property {number} versiongroupid
  * @property {Array.<ZcashTransactionIn>} vin
  * @property {Array.<ZcashTransactionIn>} vout
- * @property {number} lockTime
- * @property {number|null} expiryHeight - only present in certain block formats
- * @property {BigInt|null} valueBalance - only present in certain block formats
- * @property {Array.<ZcashSpendDescription>|null} shieldedSpend - only present in certain block formats
- * @property {Array.<ZcashOutputDescription>|null} shieldedOutput - only present in certain block formats
+ * @property {number} locktime
+ * @property {number|null} expiryheight - only present in certain block formats
+ * @property {BigInt|null} valueBalanceZat - only present in certain block formats
+ * @property {Array.<ZcashSpendDescription>|null} vShieldedSpend - only present in certain block formats
+ * @property {Array.<ZcashOutputDescription>|null} vShieldedOutput - only present in certain block formats
  * @property {Uint8Array|Buffer|null} joinSplitPubKey - a 256-bit hash - only present in certain block formats
- * @property {Array.<ZcashJoinSplitDescription>|null} joinSplits - only present in certain block formats
+ * @property {Array.<ZcashJoinSplitDescription>|null} vjoinsplit - only present in certain block formats
  * @property {Uint8Array|Buffer|null} joinSplitSig - a 512-bit signature - only present in certain block formats
  * @property {Uint8Array|Buffer|null} bindingSig - a 512-bit signature - only present in certain block formats
- * @property {Uint8Array|Buffer} hash - 256-bit hash, a double SHA2-256 hash of all bytes making up this block (calculated)
+ * @property {Uint8Array|Buffer} txid - 256-bit hash, a double SHA2-256 hash of all bytes making up this block (calculated)
  * @class
  */
 class ZcashTransaction {
@@ -36,37 +38,37 @@ class ZcashTransaction {
    *
    * @property {boolean} overwintered
    * @property {number} version
-   * @property {number} versionGroupId
+   * @property {number} versiongroupid
    * @property {Array.<ZcashTransactionIn>} vin
    * @property {Array.<ZcashTransactionIn>} vout
-   * @property {number} lockTime
-   * @property {number|null} expiryHeight
-   * @property {BigInt|null} valueBalance
-   * @property {Array.<ZcashSpendDescription>|null} shieldedSpend
-   * @property {Array.<ZcashOutputDescription>|null} shieldedOutput
+   * @property {number} locktime
+   * @property {number|null} expiryheight
+   * @property {BigInt|null} valueBalanceZat
+   * @property {Array.<ZcashSpendDescription>|null} vShieldedSpend
+   * @property {Array.<ZcashOutputDescription>|null} vShieldedOutput
    * @property {Uint8Array|Buffer|null} joinSplitPubKey
-   * @property {Array.<ZcashJoinSplitDescription>|null} joinSplits
+   * @property {Array.<ZcashJoinSplitDescription>|null} vjoinsplit
    * @property {Uint8Array|Buffer|null} joinSplitSig
    * @property {Uint8Array|Buffer|null} bindingSig
-   * @property {Uint8Array|Buffer} hash
+   * @property {Uint8Array|Buffer} txid
    * @constructs ZcashTransaction
    */
-  constructor (overwintered, version, versionGroupId, vin, vout, lockTime, expiryHeight, valueBalance, shieldedSpend, shieldedOutput, joinSplits, joinSplitPubKey, joinSplitSig, bindingSig, hash) {
+  constructor (overwintered, version, versiongroupid, vin, vout, locktime, expiryheight, valueBalanceZat, vShieldedSpend, vShieldedOutput, vjoinsplit, joinSplitPubKey, joinSplitSig, bindingSig, txid) {
     this.overwintered = overwintered
     this.version = version
-    this.versionGroupId = versionGroupId
+    this.versiongroupid = versiongroupid
     this.vin = vin
     this.vout = vout
-    this.lockTime = lockTime
-    this.expiryHeight = expiryHeight
-    this.valueBalance = valueBalance
-    this.shieldedSpend = shieldedSpend
-    this.shieldedOutput = shieldedOutput
+    this.locktime = locktime
+    this.expiryheight = expiryheight
+    this.valueBalanceZat = valueBalanceZat
+    this.vShieldedSpend = vShieldedSpend
+    this.vShieldedOutput = vShieldedOutput
     this.joinSplitPubKey = joinSplitPubKey
-    this.joinSplits = joinSplits
+    this.vjoinsplit = vjoinsplit
     this.joinSplitSig = joinSplitSig
     this.bindingSig = bindingSig
-    this.hash = hash
+    this.txid = txid
   }
 
   /**
@@ -74,11 +76,35 @@ class ZcashTransaction {
    * useful for simplified inspection.
    */
   toJSON () {
-    return Object.assign({}, this, {
-      versionGroupId: this.versionGroupId.toString(16),
-      valueBalance: Number(this.valueBalance) / COIN,
-      hash: toHashHex(this.hash)
-    })
+    const coinbase = this.isCoinbase()
+
+    const obj = {
+      txid: toHashHex(this.txid),
+      overwintered: this.overwintered,
+      version: this.version,
+      locktime: this.locktime,
+      vjoinsplit: this.vjoinsplit.map((js) => js.toJSON()),
+      vin: this.vin.map((vin) => vin.toJSON(null, coinbase)),
+      vout: this.vout.map((vout, n) => vout.toJSON(n))
+    }
+
+    if (this.overwintered) {
+      obj.expiryheight = this.expiryheight
+      obj.versiongroupid = this.versiongroupid.toString(16).padStart(8, '0')
+    }
+
+    if (this.valueBalanceZat !== null) {
+      obj.valueBalance = (Number(this.valueBalanceZat) / COIN)
+      obj.valueBalanceZat = this.valueBalanceZat
+      obj.vShieldedSpend = this.vShieldedSpend.map((ss) => ss.toJSON())
+      obj.vShieldedOutput = this.vShieldedOutput.map((so) => so.toJSON())
+    }
+
+    if (this.bindingSig) {
+      obj.bindingSig = this.bindingSig.toString('hex')
+    }
+
+    return obj
   }
 
   /**
@@ -87,6 +113,14 @@ class ZcashTransaction {
   */
   toPorcelain () {
     return this.toJSON()
+  }
+
+  isCoinbase () {
+    return this.vin &&
+      this.vin.length === 1 &&
+      this.vin[0].prevout &&
+      this.vin[0].prevout &&
+      NULL_HASH.equals(this.vin[0].prevout.hash)
   }
 }
 
@@ -137,48 +171,48 @@ function isSaplingV4 (state) {
 }
 
 ZcashTransaction._customDecodeExpiryHeight = function (decoder, properties, state) {
-  let expiryHeight = 0
+  let expiryheight = 0
   if (isOverwinterV3(state) || isSaplingV4(state)) {
-    expiryHeight = decoder.readUInt32LE()
+    expiryheight = decoder.readUInt32LE()
   }
-  properties.push(expiryHeight)
+  properties.push(expiryheight)
 }
 
 ZcashTransaction._customDecodeBalanceAndShielded = function (decoder, properties, state) {
-  let valueBalance = null
-  let shieldedSpend = null
-  let shieldedOutput = null
+  let valueBalanceZat = null
+  let vShieldedSpend = null
+  let vShieldedOutput = null
   if (isSaplingV4(state)) {
-    valueBalance = decoder.readBigInt64LE() // CAmount
-    shieldedSpend = decoder.readType('std::vector<SpendDescription>')
-    shieldedOutput = decoder.readType('std::vector<OutputDescription>')
+    valueBalanceZat = decoder.readType('CAmount') // decoder.readBigInt64LE() // CAmount
+    vShieldedSpend = decoder.readType('std::vector<SpendDescription>')
+    vShieldedOutput = decoder.readType('std::vector<OutputDescription>')
   }
-  properties.push(valueBalance)
-  properties.push(shieldedSpend)
-  properties.push(shieldedOutput)
+  properties.push(valueBalanceZat)
+  properties.push(vShieldedSpend)
+  properties.push(vShieldedOutput)
 }
 
 ZcashTransaction._customDecodeJoinSplit = function (decoder, properties, state) {
-  let joinSplits = []
+  let vjoinsplit = []
   let joinSplitPubKey
   let joinSplitSig
   if (state.nVersion >= 2) {
-    joinSplits = decoder.readType('std::vector<JSDescription>')
-    if (joinSplits.length > 0) {
+    vjoinsplit = decoder.readType('std::vector<JSDescription>')
+    if (vjoinsplit.length > 0) {
       joinSplitPubKey = decoder.readType('uint256')
       joinSplitSig = decoder.readType('joinsplit_sig_t')
     }
   }
-  properties.push(joinSplits)
+  properties.push(vjoinsplit)
   properties.push(joinSplitPubKey)
   properties.push(joinSplitSig)
 }
 
 ZcashTransaction._customDecodeBindingSig = function (decoder, properties, state) {
-  const shieldedSpend = properties[8]
-  const shieldedOutput = properties[9]
+  const vShieldedSpend = properties[8]
+  const vShieldedOutput = properties[9]
   let bindingSig
-  if (isSaplingV4(state) && !(shieldedSpend.length === 0 && shieldedOutput.length === 0)) {
+  if (isSaplingV4(state) && !(vShieldedSpend.length === 0 && vShieldedOutput.length === 0)) {
     bindingSig = decoder.readType('binding_sig_t')
   }
   properties.push(bindingSig)

@@ -1,4 +1,4 @@
-const { decodeProperties, toHashHex } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash spend description.
@@ -9,7 +9,7 @@ const { decodeProperties, toHashHex } = require('./class-utils')
  * @property {Uint8Array|Buffer} anchor - a 256-bit Merkle root of the Sapling note commitment tree at some block height in the past
  * @property {Uint8Array|Buffer} nullifier - a 256-bit nullifier of the input note
  * @property {Uint8Array|Buffer} rk - a 256-bit randomized public key for spendAuthSig
- * @property {Uint8Array|Buffer} zkproof - a GrothProof encoded directly as 192 bytes of binary data
+ * @property {Uint8Array|Buffer} proof - a GrothProof encoded directly as 192 bytes of binary data
  * @property {Uint8Array|Buffer} spendAuthSig - a 512-bit signature authorizing this spend
  * @class
  */
@@ -23,16 +23,16 @@ class ZcashSpendDescription {
    * @param {Uint8Array|Buffer} anchor
    * @param {Uint8Array|Buffer} nullifier
    * @param {Uint8Array|Buffer} rk
-   * @param {Uint8Array|Buffer} zkproof
+   * @param {Uint8Array|Buffer} proof
    * @param {Uint8Array|Buffer} spendAuthSig
    * @constructs ZcashSpendDescription
    */
-  constructor (cv, anchor, nullifier, rk, zkproof, spendAuthSig) {
+  constructor (cv, anchor, nullifier, rk, proof, spendAuthSig) {
     this.cv = cv
     this.anchor = anchor
     this.nullifier = nullifier
     this.rk = rk
-    this.zkproof = zkproof
+    this.proof = proof
     this.spendAuthSig = spendAuthSig
   }
 
@@ -46,7 +46,7 @@ class ZcashSpendDescription {
       anchor: toHashHex(this.anchor),
       nullifier: toHashHex(this.nullifier),
       rk: toHashHex(this.rk),
-      zkproof: this.zkproof.toString('hex'),
+      proof: this.proof.toString('hex'),
       spendAuthSig: this.spendAuthSig.toString('hex')
     }
   }

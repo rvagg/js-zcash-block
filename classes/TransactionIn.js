@@ -1,4 +1,5 @@
-const { decodeProperties } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
+const { scriptToAsmStr } = require('bitcoin-block/classes/script')
 
 /**
  * A class representation of a Zcash TransactionIn, multiple of which are contained within each {@link ZcashTransaction}.
@@ -33,11 +34,25 @@ class ZcashTransactionIn {
    *
    * The serailizable form converts this object to `{ coinbase: scriptSig, sequence: sequence }` to match the Zcash API output.
    */
-  toJSON () {
-    return {
-      coinbase: this.scriptSig.toString('hex'),
-      sequence: this.sequence
+  toJSON (_, coinbase) {
+    let obj
+    if (coinbase) {
+      obj = {
+        coinbase: this.scriptSig.toString('hex'),
+        sequence: this.sequence
+      }
+    } else {
+      obj = {
+        txid: toHashHex(this.prevout.hash),
+        vout: this.prevout.n,
+        scriptSig: {
+          asm: scriptToAsmStr(this.scriptSig, true),
+          hex: this.scriptSig.toString('hex')
+        },
+        sequence: this.sequence
+      }
     }
+    return obj
   }
 }
 

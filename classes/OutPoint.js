@@ -1,4 +1,4 @@
-const { decodeProperties, toHashHex } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash OutPoint for a {@link ZcashTransactionIn}.

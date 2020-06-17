@@ -5,6 +5,7 @@
   "main": "zcash-block.js",
   "dependencies": {
     "bitcoin-block": "^1.4.0",
+    "multibase": "^1.0.0",
     "multihashing": "~0.3.3"
   },
   "devDependencies": {
@@ -17,7 +18,7 @@
   "scripts": {
     "lint": "standard",
     "test:browser": "polendina --runner=bare-async --cleanup test/browser.js",
-    "test:node": "nyc polendina-node bare-async test/node.js",
+    "test:node": "polendina-node bare-async test/node.js",
     "test": "npm run lint && npm run test:node",
     "docs": "jsdoc4readme --readme *.js classes/*.js"
   },

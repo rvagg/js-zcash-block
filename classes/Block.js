@@ -1,5 +1,5 @@
 const multihashing = require('multihashing')
-const { decodeProperties, toHashHex } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
 
 const GENESIS_BITS = 0x1f07ffff
 
@@ -19,7 +19,7 @@ const GENESIS_BITS = 0x1f07ffff
  * @property {Uint8Array|Buffer} nonce - 256-bit hash
  * @property {Uint8Array|Buffer} solution
  * @property {Uint8Array|Buffer} hash - 256-bit hash, a double SHA2-256 hash of all bytes making up this block (calculated)
- * @property {Array.<ZcashTransaction>} transactions
+ * @property {Array.<ZcashTransaction>} tx
  * @property {number} difficulty - the difficulty for this block (calculated)
  * @class
  */
@@ -39,10 +39,10 @@ class ZcashBlock {
    * @param {Uint8Array|Buffer} nonce
    * @param {Uint8Array|Buffer} solution
    * @param {Uint8Array|Buffer} hash
-   * @param {Array.<ZcashTransaction>} transactions
+   * @param {Array.<ZcashTransaction>} tx
    * @constructs ZcashBlock
    */
-  constructor (version, previousblockhash, merkleroot, finalsaplingroot, time, bits, nonce, solution, hash, transactions, size) {
+  constructor (version, previousblockhash, merkleroot, finalsaplingroot, time, bits, nonce, solution, hash, tx, size) {
     this.version = version
     this.previousblockhash = previousblockhash
     this.merkleroot = merkleroot
@@ -52,7 +52,7 @@ class ZcashBlock {
     this.nonce = nonce
     this.solution = solution
     this.hash = hash
-    this.transactions = transactions
+    this.tx = tx
     this.size = size
 
     let difficulty = null
@@ -69,7 +69,7 @@ class ZcashBlock {
     })
   }
 
-  toJSON () {
+  toJSON (_, type) {
     const obj = {
       hash: toHashHex(this.hash),
       version: this.version,
@@ -82,16 +82,20 @@ class ZcashBlock {
       difficulty: this.difficulty
     }
 
-    if (this.transactions) {
-      obj.tx = this.transactions.map((tx) => { return toHashHex(tx.hash) })
-    }
-    if (this.size != null) {
-      obj.size = this.size
-    }
-
     const previousblockhash = toHashHex(this.previousblockhash)
     if (!/^0+$/.test(previousblockhash)) { // not genesis block?
       obj.previousblockhash = previousblockhash
+    }
+
+    if (type === 'header' || this.size === undefined || !this.tx) {
+      return obj
+    }
+
+    obj.size = this.size
+    if (type === 'min') {
+      obj.tx = this.tx.map((tx) => toHashHex(tx.txid))
+    } else {
+      obj.tx = this.tx.map((tx) => tx.toJSON())
     }
 
     return obj
@@ -101,8 +105,8 @@ class ZcashBlock {
    * Convert to a serializable form that has nice stringified hashes and other simplified forms. May be
    * useful for simplified inspection.
    */
-  toPorcelain () {
-    return this.toJSON()
+  toPorcelain (type) {
+    return this.toJSON(null, type)
   }
 }
 

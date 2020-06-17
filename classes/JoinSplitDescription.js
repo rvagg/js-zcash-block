@@ -1,4 +1,7 @@
-const { decodeProperties } = require('./class-utils')
+/* eslint-disable camelcase */
+
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
+const { COIN } = require('./class-utils')
 
 const SAPLING_TX_VERSION = 4
 
@@ -7,15 +10,15 @@ const SAPLING_TX_VERSION = 4
  *
  * This class isn't explicitly exported, access it for direct use with `require('zcash-block/classes/JoinSplitDescription')`.
  *
- * @property {BigInt} vpubOld - a representation of an amount / value
- * @property {BigInt} vpubNew - a representation of an amount / value
+ * @property {BigInt} vpub_oldZat - a representation of an amount / value
+ * @property {BigInt} vpub_newZat - a representation of an amount / value
  * @property {Uint8Array|Buffer} anchor - a 256-bit hash anchoring the joinsplit's position in the commitment tree
  * @property {Array.<Uint8Array>|Array.<Buffer>} nullifiers - two 256-bit blocks derived from secrets in the note
  * @property {Array.<Uint8Array>|Array.<Buffer>} commitments - two 256-bit blocks representing the spend commitments
  * @property {Uint8Array|Buffer} ephemeralKey - a 256-bit hash
  * @property {Uint8Array|Buffer} randomSeed - - a 256-bit block
  * @property {Array.<Uint8Array>|Array.<Buffer>} macs - two 256-bit hashes required to verify this joinsplit
- * @property {Uint8Array|Buffer|PHGRProof} sproutProof - either a GrothProof encoded directly as 192 bytes of binary data or a decoded {@link PHGRProof}, depending on the block version.
+ * @property {Uint8Array|Buffer|PHGRProof} proof - either a GrothProof encoded directly as 192 bytes of binary data or a decoded {@link PHGRProof}, depending on the block version.
  * @property {Uint8Array|Buffer} ciphertexts - two ciphertexts of 601 bytes each which encode trapdoors, values and other information that the recipient needs, including a memo field.
  * @class
  */
@@ -25,28 +28,28 @@ class ZcashJoinSplitDescription {
    *
    * See the class properties for expanded information on these parameters.
    *
-   * @param {BigInt} vpubOld
-   * @param {BigInt} vpubNew
+   * @param {BigInt} vpub_oldZat
+   * @param {BigInt} vpub_newZat
    * @param {Uint8Array|Buffer} anchor
    * @param {Array.<Uint8Array>|Array.<Buffer>} nullifiers
    * @param {Array.<Uint8Array>|Array.<Buffer>} commitments
    * @param {Uint8Array|Buffer} ephemeralKey
    * @param {Uint8Array|Buffer} randomSeed
    * @param {Array.<Uint8Array>|Array.<Buffer>} macs
-   * @param {Uint8Array|Buffer|PHGRProof} sproutProof
+   * @param {Uint8Array|Buffer|PHGRProof} proof
    * @param {Uint8Array|Buffer} ciphertexts
    * @constructs ZcashJoinSplitDescription
    */
-  constructor (vpubOld, vpubNew, anchor, nullifiers, commitments, ephemeralKey, randomSeed, macs, sproutProof, ciphertexts) {
-    this.vpubOld = vpubOld
-    this.vpubNew = vpubNew
+  constructor (vpub_oldZat, vpub_newZat, anchor, nullifiers, commitments, ephemeralKey, randomSeed, macs, proof, ciphertexts) {
+    this.vpub_oldZat = vpub_oldZat
+    this.vpub_newZat = vpub_newZat
     this.anchor = anchor
     this.nullifiers = nullifiers
     this.commitments = commitments
     this.ephemeralKey = ephemeralKey
     this.randomSeed = randomSeed
     this.macs = macs
-    this.sproutProof = sproutProof
+    this.proof = proof
     this.ciphertexts = ciphertexts
   }
 
@@ -55,10 +58,21 @@ class ZcashJoinSplitDescription {
    * useful for simplified inspection.
    */
   toJSON () {
-    return Object.assign({}, this, {
-      vpubOld: Number(this.vpubOld),
-      vpubNew: Number(this.vpubNew)
-    })
+    const obj = {
+      vpub_old: Number(this.vpub_oldZat) / COIN,
+      vpub_oldZat: Number(this.vpub_oldZat),
+      vpub_new: Number(this.vpub_newZat) / COIN,
+      vpub_newZat: Number(this.vpub_newZat),
+      anchor: toHashHex(this.anchor),
+      nullifiers: this.nullifiers.map((nl) => toHashHex(nl)),
+      commitments: this.commitments.map((nl) => toHashHex(nl)),
+      onetimePubKey: toHashHex(this.ephemeralKey),
+      randomSeed: toHashHex(this.randomSeed),
+      macs: this.macs.map((nl) => toHashHex(nl)),
+      proof: this.proof.toString('hex'),
+      ciphertexts: this.ciphertexts.map((nl) => nl.toString('hex'))
+    }
+    return obj
   }
 }
 
