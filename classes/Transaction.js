@@ -85,7 +85,7 @@ class ZcashTransaction {
   * Convert to a serializable form that has nice stringified hashes and other simplified forms. May be
   * useful for simplified inspection.
   */
-  toSerializable () {
+  toPorcelain () {
     return this.toJSON()
   }
 }
@@ -94,7 +94,7 @@ class ZcashTransaction {
 // Custom decoder descriptors and functions below here, used by ../decoder.js
 
 ZcashTransaction._nativeName = 'CTransaction'
-ZcashTransaction._propertiesDescriptor = decodeProperties(`
+ZcashTransaction._decodePropertiesDescriptor = decodeProperties(`
 _customDecodeVersionAndGroup
 const std::vector<CTxIn> vin;
 const std::vector<CTxOut> vout;

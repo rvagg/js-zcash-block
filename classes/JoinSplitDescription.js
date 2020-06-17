@@ -67,7 +67,7 @@ class ZcashJoinSplitDescription {
 
 ZcashJoinSplitDescription._nativeName = 'JSDescription'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L179
-ZcashJoinSplitDescription._propertiesDescriptor = decodeProperties(`
+ZcashJoinSplitDescription._decodePropertiesDescriptor = decodeProperties(`
 CAmount vpub_old;
 CAmount vpub_new;
 

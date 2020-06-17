@@ -101,7 +101,7 @@ class ZcashBlock {
    * Convert to a serializable form that has nice stringified hashes and other simplified forms. May be
    * useful for simplified inspection.
    */
-  toSerializable () {
+  toPorcelain () {
     return this.toJSON()
   }
 }
@@ -120,7 +120,7 @@ function targetDifficulty (bits) {
 
 ZcashBlock._nativeName = 'CBlockHeader'
 // https://github.com/zcash/zcash/blob/fa1b656482a38d3a6c97950b35521a9c45da1e9c/src/primitives/block.h#L26
-ZcashBlock._propertiesDescriptor = decodeProperties(`
+ZcashBlock._decodePropertiesDescriptor = decodeProperties(`
 _customDecoderMarkStart
 int32_t nVersion;
 uint256 hashPrevBlock;
@@ -159,7 +159,7 @@ ZcashBlock._customDecodeSize = function (decoder, properties, state) {
 class ZcashBlockHeaderOnly extends ZcashBlock {}
 ZcashBlockHeaderOnly._nativeName = 'CBlockHeader__Only'
 // properties is the same, minus the last two for transactions & size
-ZcashBlockHeaderOnly._propertiesDescriptor = decodeProperties(`
+ZcashBlockHeaderOnly._decodePropertiesDescriptor = decodeProperties(`
 _customDecoderMarkStart
 int32_t nVersion;
 uint256 hashPrevBlock;

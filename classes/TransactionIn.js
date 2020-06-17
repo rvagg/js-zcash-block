@@ -45,7 +45,7 @@ class ZcashTransactionIn {
 // Custom decoder descriptors and functions below here, used by ../decoder.js
 
 ZcashTransactionIn._nativeName = 'CTxIn'
-ZcashTransactionIn._propertiesDescriptor = decodeProperties(`
+ZcashTransactionIn._decodePropertiesDescriptor = decodeProperties(`
 COutPoint prevout;
 CScript scriptSig;
 uint32_t nSequence;

@@ -27,7 +27,7 @@ class ZcashFq2 {
 
 ZcashFq2._nativeName = 'Fq2'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Proof.hpp#L46
-ZcashFq2._propertiesDescriptor = decodeProperties(`
+ZcashFq2._decodePropertiesDescriptor = decodeProperties(`
 base_blob<512> data;
 `)
 

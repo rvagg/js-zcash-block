@@ -30,7 +30,7 @@ class ZcashCompressedG2 {
 
 ZcashCompressedG2._nativeName = 'CompressedG2'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Proof.hpp#L129
-ZcashCompressedG2._propertiesDescriptor = decodeProperties(`
+ZcashCompressedG2._decodePropertiesDescriptor = decodeProperties(`
 bool y_gt;
 Fq2 x;
 `)

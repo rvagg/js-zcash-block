@@ -1,7 +1,13 @@
 const ZcashBlock = require('./classes/Block')
-const decodeBlock = require('./decode')
+const coding = require('bitcoin-block/coding')(require('./classes/'))
 
-ZcashBlock.decode = decodeBlock
-ZcashBlock.decodeHeaderOnly = decodeBlock.decodeBlockHeaderOnly
+ZcashBlock.decode = function decodeBlock (buf, strictLengthUsage) {
+  return coding.decodeType(buf, 'CBlockHeader', strictLengthUsage)
+}
 
-module.exports = ZcashBlock
+ZcashBlock.decodeHeaderOnly = function decodeBlockHeaderOnly (buf, strictLengthUsage) {
+  return coding.decodeType(buf, 'CBlockHeader__Only', strictLengthUsage)
+}
+
+module.exports.ZcashBlock = ZcashBlock
+module.exports.ZcashBlockHeaderOnly = ZcashBlock.ZcashBlockHeaderOnly

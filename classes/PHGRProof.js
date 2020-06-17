@@ -48,7 +48,7 @@ class ZcashPHGRProof {
 
 ZcashPHGRProof._nativeName = 'PHGRProof'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Proof.hpp#L181-L188
-ZcashPHGRProof._propertiesDescriptor = decodeProperties(`
+ZcashPHGRProof._decodePropertiesDescriptor = decodeProperties(`
 CompressedG1 g_A;
 CompressedG1 g_A_prime;
 CompressedG2 g_B;

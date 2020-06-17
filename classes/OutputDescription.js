@@ -57,7 +57,7 @@ class ZcashOutputDescription {
 
 ZcashOutputDescription._nativeName = 'OutputDescription'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L48
-ZcashOutputDescription._propertiesDescriptor = decodeProperties(`
+ZcashOutputDescription._decodePropertiesDescriptor = decodeProperties(`
 uint256 cv;                     //!< A value commitment to the value of the output note.
 uint256 cm;                     //!< The note commitment for the output note.
 uint256 ephemeralKey;           //!< A Jubjub public key.

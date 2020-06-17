@@ -44,7 +44,7 @@ class ZcashTransactionOut {
 // Custom decoder descriptors and functions below here, used by ../decoder.js
 
 ZcashTransactionOut._nativeName = 'CTxOut'
-ZcashTransactionOut._propertiesDescriptor = decodeProperties(`
+ZcashTransactionOut._decodePropertiesDescriptor = decodeProperties(`
 CAmount nValue;
 CScript scriptPubKey;
 `)

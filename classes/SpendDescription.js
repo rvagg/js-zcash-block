@@ -57,7 +57,7 @@ class ZcashSpendDescription {
 
 ZcashSpendDescription._nativeName = 'SpendDescription'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L48
-ZcashSpendDescription._propertiesDescriptor = decodeProperties(`
+ZcashSpendDescription._decodePropertiesDescriptor = decodeProperties(`
 uint256 cv;                    //!< A value commitment to the value of the input note.
 uint256 anchor;                //!< A Merkle root of the Sapling note commitment tree at some block height in the past.
 uint256 nullifier;             //!< The nullifier of the input note.
