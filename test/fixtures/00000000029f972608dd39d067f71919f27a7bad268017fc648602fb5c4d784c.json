@@ -1,14 +1,120 @@
 {
   "hash": "00000000029f972608dd39d067f71919f27a7bad268017fc648602fb5c4d784c",
-  "confirmations": 4,
+  "confirmations": 370054,
   "size": 2007,
   "height": 499295,
   "version": 4,
   "merkleroot": "4f3efa6bff5039d5d41fbad3cb499792e156146f7d9bd837bca980187d58e568",
   "finalsaplingroot": "1549ead10b6548408875e1388ed423e23117a743bd5be2419326fb98c417738c",
+  "chainhistoryroot": "0000000000000000000000000000000000000000000000000000000000000000",
   "tx": [
-    "0497b4f19d9d50ad2ff34fdd1c5c8d4296e7497f84a8fbada82eea7e2a91f0f2",
-    "dd986acc802a4ba1d9314b1184d9f537bf7ac99573dff403ecde374a5601a69a"
+    {
+      "txid": "0497b4f19d9d50ad2ff34fdd1c5c8d4296e7497f84a8fbada82eea7e2a91f0f2",
+      "overwintered": true,
+      "version": 4,
+      "versiongroupid": "892f2085",
+      "locktime": 604257504,
+      "expiryheight": 0,
+      "vin": [
+        {
+          "coinbase": "035f9e070fe4b883e5bda9e7a59ee4bb99e9b1bc04f09f909f",
+          "sequence": 1345504356
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00010000,
+          "valueZat": 1000010000,
+          "valueSat": 1000010000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 b722782e401ed7a31135580ada74962ef32e5cd2 OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a914b722782e401ed7a31135580ada74962ef32e5cd288ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1aZvxRLCGVeMPFXvqfnBgHVEbi4c6g8MVa"
+            ]
+          }
+        },
+        {
+          "value": 2.50000000,
+          "valueZat": 250000000,
+          "valueSat": 250000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_HASH160 94f5c8f356a24300ed4d822bee76a7bc19551c9c OP_EQUAL",
+            "hex": "a91494f5c8f356a24300ed4d822bee76a7bc19551c9c87",
+            "reqSigs": 1,
+            "type": "scripthash",
+            "addresses": [
+              "t3Y9FNi26J7UtAUC4moaETLbMo8KS1Be6ME"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ],
+      "valueBalance": 0.00000000,
+      "valueBalanceZat": 0,
+      "vShieldedSpend": [
+      ],
+      "vShieldedOutput": [
+      ]
+    },
+    {
+      "txid": "dd986acc802a4ba1d9314b1184d9f537bf7ac99573dff403ecde374a5601a69a",
+      "overwintered": true,
+      "version": 4,
+      "versiongroupid": "892f2085",
+      "locktime": 0,
+      "expiryheight": 499315,
+      "vin": [
+        {
+          "txid": "85f9f00df1ef74e51b585b0af93cd84242d29189a363f2a6e0250abec41f15d7",
+          "vout": 180,
+          "scriptSig": {
+            "asm": "3044022055daed84239bdb1ee5a822dc899da120bc0cf435a2e782c8e8d4bfc24b4e802802207b8856c4cda8cd13f71dde186195060b5bb1e8c341050535a24cb01c17694428[ALL] 03aabc4b8f2910e52e2073f84c0172ce96e7acd6417e231d426cbb8eea0551b998",
+            "hex": "473044022055daed84239bdb1ee5a822dc899da120bc0cf435a2e782c8e8d4bfc24b4e802802207b8856c4cda8cd13f71dde186195060b5bb1e8c341050535a24cb01c17694428012103aabc4b8f2910e52e2073f84c0172ce96e7acd6417e231d426cbb8eea0551b998"
+          },
+          "sequence": 4294967295
+        },
+        {
+          "txid": "02f7dd9775e78e14d242d6623f1996d3f736a71f0065d8b1a7b2c5c3beb21bfb",
+          "vout": 0,
+          "scriptSig": {
+            "asm": "3045022100efc0b47f87e5ff922a4bbcc9c664acedeccb1a933b320d621850ef3c80e7ef3e02200aae6ba865e94923967ce18168c52586908e3f7593407a1330d95a31b4955a20[ALL] 038b9a767c2eb28bf50f740ff8a5a2ce8a98f06a8f304a022a1d1da72a0caae621",
+            "hex": "483045022100efc0b47f87e5ff922a4bbcc9c664acedeccb1a933b320d621850ef3c80e7ef3e02200aae6ba865e94923967ce18168c52586908e3f7593407a1330d95a31b4955a200121038b9a767c2eb28bf50f740ff8a5a2ce8a98f06a8f304a022a1d1da72a0caae621"
+          },
+          "sequence": 4294967295
+        }
+      ],
+      "vout": [
+        {
+          "value": 116.15092203,
+          "valueZat": 11615092203,
+          "valueSat": 11615092203,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 6e3cbfd5dd78406bd2f2d6b128da04e4e67ddb0d OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a9146e3cbfd5dd78406bd2f2d6b128da04e4e67ddb0d88ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1TvV7Nmxt3dPPJnKoLbJu66CKzg3Yg4gb5"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ],
+      "valueBalance": 0.00000000,
+      "valueBalanceZat": 0,
+      "vShieldedSpend": [
+      ],
+      "vShieldedOutput": [
+      ]
+    }
   ],
   "time": 1552849585,
   "nonce": "370bc82900000000000000000000000000000000000000000040075500000000",
