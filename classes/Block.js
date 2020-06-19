@@ -1,6 +1,5 @@
 const multihashing = require('multihashing')
 const {
-  HEADER_BYTES,
   decodeProperties,
   toHashHex,
   fromHashHex,
@@ -8,6 +7,8 @@ const {
   dblSha2256,
   merkleRoot
 } = require('bitcoin-block/classes/class-utils')
+const { HEADER_BYTES } = require('./class-utils')
+const ZcashTransaction = require('./Transaction')
 
 const GENESIS_BITS = 0x1f07ffff
 
@@ -157,14 +158,13 @@ ZcashBlock.fromPorcelain = function fromPorcelain (porcelain) {
     throw new Error(`solution property should be a ${1344 * 2}-character hex string`)
   }
   let tx
-  /*
+
   if (porcelain.tx) {
     if (!Array.isArray(porcelain.tx)) {
       throw new TypeError('tx property must be an array')
     }
     tx = porcelain.tx.map(ZcashTransaction.fromPorcelain)
   }
-  */
 
   const block = new ZcashBlock(
     porcelain.version,
@@ -188,8 +188,6 @@ ZcashBlock.fromPorcelain = function fromPorcelain (porcelain) {
   block.hash = dblSha2256(rawData.slice(0, HEADER_BYTES))
   if (tx) {
     block.size = rawData.length
-    block._calculateStrippedSize()
-    block._calculateWeight()
   }
 
   return block

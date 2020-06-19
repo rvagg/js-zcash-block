@@ -71,7 +71,7 @@ function verifyMinimalForm (decoded, expected) {
 
 function verifyMaximalForm (decoded, expected) {
   const porcelain = decoded.toPorcelain()
-  porcelain.tx.forEach(cleanTransaction)
+  porcelain.tx.map(cleanTransaction)
   assert.deepStrictEqual(roundDifficulty(porcelain), roundDifficulty(expected))
 }
 
@@ -113,6 +113,19 @@ function verifyMerkleRoot (decoded, expected) {
   assert.strictEqual(merkleRoot, expected.merkleroot, 'calculated merkle root')
 }
 
+function verifyRoundTrip (decoded, expected, block) {
+  // instantiate new
+  const from = Object.assign({}, decoded.toPorcelain())
+  from.tx = from.tx.map((tx) => Object.assign({}, tx))
+  const newBlock = ZcashBlock.fromPorcelain(from)
+  const newBlockClean = roundDifficulty(newBlock.toPorcelain())
+  newBlockClean.tx.map(cleanTransaction)
+  assert.deepStrictEqual(newBlockClean, roundDifficulty(expected))
+  // encode newly instantiated
+  const encodedNew = newBlock.encode()
+  assert.strictEqual(encodedNew.toString('hex'), block.toString('hex'), 're-instantiated and encoded block')
+}
+
 function test (hash, block, expected) {
   cleanExpectedBlock(expected)
 
@@ -146,6 +159,8 @@ function test (hash, block, expected) {
   // check that we can properly calculate the transaction merkle root, this
   // doesn't include witness data
   verifyMerkleRoot(decoded, expected)
+
+  verifyRoundTrip(decoded, expected, block)
 }
 
 module.exports = test
