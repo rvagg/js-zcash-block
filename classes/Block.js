@@ -5,7 +5,8 @@ const {
   toHashHex,
   fromHashHex,
   isHexString,
-  dblSha2256
+  dblSha2256,
+  merkleRoot
 } = require('bitcoin-block/classes/class-utils')
 
 const GENESIS_BITS = 0x1f07ffff
@@ -114,6 +115,14 @@ class ZcashBlock {
    */
   toPorcelain (type) {
     return this.toJSON(null, type)
+  }
+
+  calculateMerkleRoot () {
+    if (!this.tx || !this.tx.length) {
+      throw new Error('Cannot calculate merkle root without transactions')
+    }
+    const hashes = this.tx.map((tx) => tx.txid)
+    return merkleRoot(hashes)
   }
 }
 

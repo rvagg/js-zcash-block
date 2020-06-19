@@ -108,6 +108,11 @@ function verifyTransactionRoundTrip (tx, expectedTx, i) {
   assert.strictEqual(encodedNew.toString('hex'), newTransaction.rawBytes, `re-instantiated and encoded transaction (${i})`)
 }
 
+function verifyMerkleRoot (decoded, expected) {
+  const merkleRoot = toHashHex(decoded.calculateMerkleRoot())
+  assert.strictEqual(merkleRoot, expected.merkleroot, 'calculated merkle root')
+}
+
 function test (hash, block, expected) {
   cleanExpectedBlock(expected)
 
@@ -136,6 +141,11 @@ function test (hash, block, expected) {
   // test the serialized maximum form, where the `tx` array the full transaction
   // data, potentially huge
   verifyMaximalForm(decoded, expected)
+
+  // ---------------------------------------------------------------------------
+  // check that we can properly calculate the transaction merkle root, this
+  // doesn't include witness data
+  verifyMerkleRoot(decoded, expected)
 }
 
 module.exports = test
