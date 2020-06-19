@@ -45,4 +45,9 @@ uint256 hash;
 uint32_t n;
 `)
 
+ZcashOutPoint._encodePropertiesDescriptor = decodeProperties(`
+uint256 hash;
+uint32_t n;
+`)
+
 module.exports = ZcashOutPoint

@@ -48,6 +48,10 @@ class ZcashPHGRProof {
   }
 }
 
+ZcashPHGRProof._encodePropertiesDescriptor = decodeProperties(`
+slice rawBytes
+`)
+
 // -------------------------------------------------------------------------------------------------------
 // Custom decoder descriptors and functions below here, used by ../decoder.js
 

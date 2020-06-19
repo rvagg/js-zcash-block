@@ -1,5 +1,12 @@
 const multihashing = require('multihashing')
-const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
+const {
+  HEADER_BYTES,
+  decodeProperties,
+  toHashHex,
+  fromHashHex,
+  isHexString,
+  dblSha2256
+} = require('bitcoin-block/classes/class-utils')
 
 const GENESIS_BITS = 0x1f07ffff
 
@@ -110,6 +117,75 @@ class ZcashBlock {
   }
 }
 
+ZcashBlock.fromPorcelain = function fromPorcelain (porcelain) {
+  if (typeof porcelain !== 'object') {
+    throw new TypeError('ZcashBlock porcelain must be an object')
+  }
+  if (porcelain.previousblockhash != null) {
+    if (typeof porcelain.previousblockhash !== 'string' || !isHexString(porcelain.previousblockhash, 64)) {
+      throw new Error('previousblockhash property should be a 64-character hex string')
+    }
+  } // else assume genesis
+  if (typeof porcelain.version !== 'number') {
+    throw new TypeError('version property must be a number')
+  }
+  if (typeof porcelain.merkleroot !== 'string' || !isHexString(porcelain.merkleroot, 64)) {
+    throw new Error('merkleroot property should be a 64-character hex string')
+  }
+  if (typeof porcelain.finalsaplingroot !== 'string' || !isHexString(porcelain.finalsaplingroot, 64)) {
+    throw new Error('finalsaplingroot property should be a 64-character hex string')
+  }
+  if (typeof porcelain.time !== 'number') {
+    throw new TypeError('time property must be a number')
+  }
+  if (typeof porcelain.nonce !== 'string' || !isHexString(porcelain.nonce, 64)) {
+    throw new Error('nonce property should be a 64-character hex string')
+  }
+  if (typeof porcelain.bits !== 'string' && !/^[0-9a-f]+$/.test(porcelain.bits)) {
+    throw new TypeError('bits property must be a hex string')
+  }
+  if (typeof porcelain.solution !== 'string' || !isHexString(porcelain.solution, 1344 * 2)) {
+    throw new Error(`solution property should be a ${1344 * 2}-character hex string`)
+  }
+  let tx
+  /*
+  if (porcelain.tx) {
+    if (!Array.isArray(porcelain.tx)) {
+      throw new TypeError('tx property must be an array')
+    }
+    tx = porcelain.tx.map(ZcashTransaction.fromPorcelain)
+  }
+  */
+
+  const block = new ZcashBlock(
+    porcelain.version,
+    porcelain.previousblockhash ? fromHashHex(porcelain.previousblockhash) : Buffer.alloc(32),
+    fromHashHex(porcelain.merkleroot),
+    fromHashHex(porcelain.finalsaplingroot),
+    porcelain.time,
+    parseInt(porcelain.bits, 16),
+    fromHashHex(porcelain.nonce),
+    Buffer.from(porcelain.solution, 'hex'),
+    null, // hash
+    tx
+  )
+
+  // calculate the hash for this block
+  // this comes from ../zcash-block, if it's not instantiated via there then it won't be available
+  if (typeof block.encode !== 'function') {
+    throw new Error('Block#encode() not available')
+  }
+  const rawData = block.encode()
+  block.hash = dblSha2256(rawData.slice(0, HEADER_BYTES))
+  if (tx) {
+    block.size = rawData.length
+    block._calculateStrippedSize()
+    block._calculateWeight()
+  }
+
+  return block
+}
+
 function targetDifficulty (bits) {
   var target = bits & 0xffffff
   var mov = 8 * ((bits >>> 24) - 3)
@@ -160,6 +236,24 @@ ZcashBlock._customDecodeSize = function (decoder, properties, state) {
   properties.push(size)
 }
 
+ZcashBlock._encodePropertiesDescriptor = decodeProperties(`
+int32_t version;
+uint256 previousblockhash;
+uint256 merkleroot;
+uint256 finalsaplingroot;
+uint32_t time;
+uint32_t bits;
+uint256 nonce;
+std::vector<unsigned char> solution;
+_customEncodeTransactions
+`)
+
+ZcashBlock._customEncodeTransactions = function * (block, encoder, args) {
+  if (Array.isArray(block.tx)) {
+    yield * encoder('std::vector<CTransaction>', block.tx, args)
+  }
+}
+
 class ZcashBlockHeaderOnly extends ZcashBlock {}
 ZcashBlockHeaderOnly._nativeName = 'CBlockHeader__Only'
 // properties is the same, minus the last two for transactions & size
@@ -177,6 +271,17 @@ _customDecodeHash
 `)
 ZcashBlockHeaderOnly._customDecoderMarkStart = ZcashBlock._customDecoderMarkStart
 ZcashBlockHeaderOnly._customDecodeHash = ZcashBlock._customDecodeHash
+
+ZcashBlockHeaderOnly._encodePropertiesDescriptor = decodeProperties(`
+int32_t version;
+uint256 previousblockhash;
+uint256 merkleroot;
+uint256 finalsaplingroot;
+uint32_t time;
+uint32_t bits;
+uint256 nonce;
+std::vector<unsigned char> solution;
+`)
 
 module.exports = ZcashBlock
 module.exports.ZcashBlockHeaderOnly = ZcashBlockHeaderOnly

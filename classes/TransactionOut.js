@@ -1,5 +1,5 @@
 const multibase = require('multibase')
-const { decodeProperties, dblSha2256, hash160 } = require('bitcoin-block/classes/class-utils')
+const { decodeProperties, dblSha2256, hash160, isHexString } = require('bitcoin-block/classes/class-utils')
 const { COIN } = require('./class-utils')
 const { types, scriptToAsmStr, solver, extractDestinations } = require('bitcoin-block/classes/script')
 
@@ -67,6 +67,23 @@ class ZcashTransactionOut {
   }
 }
 
+ZcashTransactionOut.fromPorcelain = function fromPorcelain (porcelain) {
+  if (typeof porcelain !== 'object') {
+    throw new TypeError('ZcashTransactionOut porcelain must be an object')
+  }
+  if (typeof porcelain.value !== 'number') {
+    throw new TypeError('value property must be a number')
+  }
+  if (typeof porcelain.scriptPubKey !== 'object') {
+    throw new TypeError('scriptPubKey property must be an object')
+  }
+  if (typeof porcelain.scriptPubKey.hex !== 'string' || !isHexString(porcelain.scriptPubKey.hex)) {
+    throw new TypeError('scriptPubKey.hex property must be a hex string')
+  }
+  const value = Math.round(porcelain.value * COIN) // round to deal with the likely fraction, we need a uint64
+  return new ZcashTransactionOut(value, Buffer.from(porcelain.scriptPubKey.hex, 'hex'))
+}
+
 function encodeAddress (buf, type) {
   if (type === types.TX_PUBKEYHASH || type === types.TX_PUBKEY) {
     if (type === types.TX_PUBKEY) {
@@ -89,6 +106,11 @@ function encodeAddress (buf, type) {
 ZcashTransactionOut._nativeName = 'CTxOut'
 ZcashTransactionOut._decodePropertiesDescriptor = decodeProperties(`
 CAmount nValue;
+CScript scriptPubKey;
+`)
+
+ZcashTransactionOut._encodePropertiesDescriptor = decodeProperties(`
+CAmount value;
 CScript scriptPubKey;
 `)
 

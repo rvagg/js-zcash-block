@@ -1,4 +1,4 @@
-const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
+const { decodeProperties, toHashHex, isHexString, fromHashHex } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash spend description.
@@ -52,6 +52,38 @@ class ZcashSpendDescription {
   }
 }
 
+ZcashSpendDescription.fromPorcelain = function fromPorcelain (porcelain) {
+  if (typeof porcelain !== 'object') {
+    throw new TypeError('ZcashSpendDescription porcelain must be an object')
+  }
+  if (typeof porcelain.cv !== 'string' || !isHexString(porcelain.cv, 64)) {
+    throw new Error('cv property should be a 64-character hex string')
+  }
+  if (typeof porcelain.anchor !== 'string' || !isHexString(porcelain.anchor, 64)) {
+    throw new Error('anchor property should be a 64-character hex string')
+  }
+  if (typeof porcelain.nullifier !== 'string' || !isHexString(porcelain.nullifier, 64)) {
+    throw new Error('nullifier property should be a 64-character hex string')
+  }
+  if (typeof porcelain.rk !== 'string' || !isHexString(porcelain.rk, 64)) {
+    throw new Error('rk property should be a 64-character hex string')
+  }
+  if (typeof porcelain.spendAuthSig !== 'string' || !isHexString(porcelain.spendAuthSig)) {
+    throw new Error('spendAuthSig property should be a 64-character hex string')
+  }
+  if (typeof porcelain.proof !== 'string' || !isHexString(porcelain.proof, (48 + 96 + 48) * 2)) {
+    throw new Error(`proof property should be a ${(48 + 96 + 48) * 2}-character hex string`)
+  }
+
+  return new ZcashSpendDescription(
+    fromHashHex(porcelain.cv),
+    fromHashHex(porcelain.anchor),
+    fromHashHex(porcelain.nullifier),
+    fromHashHex(porcelain.rk),
+    Buffer.from(porcelain.proof, 'hex'),
+    Buffer.from(porcelain.spendAuthSig, 'hex'))
+}
+
 // -------------------------------------------------------------------------------------------------------
 // Custom decoder descriptors and functions below here, used by ../decoder.js
 
@@ -64,6 +96,15 @@ uint256 nullifier;             //!< The nullifier of the input note.
 uint256 rk;                    //!< The randomized public key for spendAuthSig.
 libzcash::GrothProof zkproof;  //!< A zero-knowledge proof using the spend circuit.
 spend_auth_sig_t spendAuthSig; //!< A signature authorizing this spend.
+`)
+
+ZcashSpendDescription._encodePropertiesDescriptor = decodeProperties(`
+uint256 cv
+uint256 anchor
+uint256 nullifier
+uint256 rk
+libzcash::GrothProof proof
+spend_auth_sig_t spendAuthSig
 `)
 
 module.exports = ZcashSpendDescription
