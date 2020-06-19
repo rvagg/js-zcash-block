@@ -4,7 +4,7 @@
   "description": "A Zcash block interface and decoder for JavaScript",
   "main": "zcash-block.js",
   "dependencies": {
-    "bitcoin-block": "^1.4.0",
+    "bitcoin-block": "github:rvagg/js-bitcoin-block#rvagg/zcash",
     "multibase": "^1.0.0",
     "multihashing": "~0.3.3"
   },
