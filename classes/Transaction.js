@@ -332,6 +332,12 @@ ZcashTransaction._customDecodeHash = function (decoder, properties, state) {
   const hashBytes = properties[properties.length - 1] // rawBytes
   const digest = dblSha2256(hashBytes)
   properties.push(digest)
+
+  /* debugging data for generating test fixtures focused on transactions
+  const start = state.transactionStartPos
+  const end = decoder.currentPosition()
+  require('fs').appendFileSync('tx.log', `  ['${digest.toString('hex')}', ${start}, ${end}],\n`, 'utf8')
+  */
 }
 
 ZcashTransaction._encodePropertiesDescriptor = decodeProperties(`
