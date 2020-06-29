@@ -1,13 +1,61 @@
 {
   "hash": "0000000002dddf6282ffa59395afd262c5146b24bb5aa415058bc7bf45af4f8a",
-  "confirmations": 3,
+  "confirmations": 470965,
   "size": 1624,
   "height": 398384,
   "version": 4,
   "merkleroot": "27de29a6fc61b3a8cdad366888f63ed6a3a7f5c2be9047870d9c878fcf01df09",
   "finalsaplingroot": "3e49b5f954aa9d3545bc6c37744661eea48d7c34e3000d82b7f0010c30f4c2fb",
+  "chainhistoryroot": "0000000000000000000000000000000000000000000000000000000000000000",
   "tx": [
-    "27de29a6fc61b3a8cdad366888f63ed6a3a7f5c2be9047870d9c878fcf01df09"
+    {
+      "txid": "27de29a6fc61b3a8cdad366888f63ed6a3a7f5c2be9047870d9c878fcf01df09",
+      "overwintered": true,
+      "version": 3,
+      "versiongroupid": "03c48270",
+      "locktime": 0,
+      "expiryheight": 0,
+      "vin": [
+        {
+          "coinbase": "03301406051256f65103",
+          "sequence": 4294967295
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00000000,
+          "valueZat": 1000000000,
+          "valueSat": 1000000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 8cd0cd638c0e478090d293d07d8da94d50e7e9ce OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a9148cd0cd638c0e478090d293d07d8da94d50e7e9ce88ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1WiAk2hA8wUoWYv9mdqAeGPXaZL6RqREb9"
+            ]
+          }
+        },
+        {
+          "value": 2.50000000,
+          "valueZat": 250000000,
+          "valueSat": 250000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_HASH160 317e483f60b1b9029b232b206aada27c68735d21 OP_EQUAL",
+            "hex": "a914317e483f60b1b9029b232b206aada27c68735d2187",
+            "reqSigs": 1,
+            "type": "scripthash",
+            "addresses": [
+              "t3P5KKX97gXYFSaSjJPiruQEX84yF5z3Tjq"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ]
+    }
   ],
   "time": 1537640156,
   "nonce": "17a056460000000000000000000000000000000000000000273c106a00000000",

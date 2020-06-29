@@ -1,4 +1,4 @@
-const { decodeProperties } = require('./class-utils')
+const { decodeProperties } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a property of a Zcash transaction joinsplit proof.
@@ -30,7 +30,7 @@ class ZcashCompressedG1 {
 
 ZcashCompressedG1._nativeName = 'CompressedG1'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/zcash/Proof.hpp#L79
-ZcashCompressedG1._propertiesDescriptor = decodeProperties(`
+ZcashCompressedG1._decodePropertiesDescriptor = decodeProperties(`
 bool y_lsb;
 Fq x;
 `)

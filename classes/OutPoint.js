@@ -1,4 +1,4 @@
-const { decodeProperties, toHashHex } = require('./class-utils')
+const { decodeProperties, toHashHex } = require('bitcoin-block/classes/class-utils')
 
 /**
  * A class representation of a Zcash OutPoint for a {@link ZcashTransactionIn}.
@@ -40,7 +40,12 @@ class ZcashOutPoint {
 
 ZcashOutPoint._nativeName = 'COutPoint'
 // https://github.com/zcash/zcash/blob/6da42887f10f9228da4c8c1182174d70b2633284/src/primitives/transaction.h#L312
-ZcashOutPoint._propertiesDescriptor = decodeProperties(`
+ZcashOutPoint._decodePropertiesDescriptor = decodeProperties(`
+uint256 hash;
+uint32_t n;
+`)
+
+ZcashOutPoint._encodePropertiesDescriptor = decodeProperties(`
 uint256 hash;
 uint32_t n;
 `)

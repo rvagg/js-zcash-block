@@ -1,13 +1,59 @@
 {
   "hash": "000000000b73234d958a7bafd7784b4ac3e718d1ae9b48f6c5ff04dee7b8ae96",
-  "confirmations": 1,
+  "confirmations": 827269,
   "size": 1619,
   "height": 42080,
   "version": 4,
   "merkleroot": "78e6d3239790791a5c78a55cf0c36a2b95a92ae29320e5c4fb62cd434b85d29f",
   "finalsaplingroot": "0000000000000000000000000000000000000000000000000000000000000000",
+  "chainhistoryroot": "0000000000000000000000000000000000000000000000000000000000000000",
   "tx": [
-    "78e6d3239790791a5c78a55cf0c36a2b95a92ae29320e5c4fb62cd434b85d29f"
+    {
+      "txid": "78e6d3239790791a5c78a55cf0c36a2b95a92ae29320e5c4fb62cd434b85d29f",
+      "overwintered": false,
+      "version": 1,
+      "locktime": 0,
+      "vin": [
+        {
+          "coinbase": "0360a400092f666c79706f6f6c2f",
+          "sequence": 4294967295
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00000000,
+          "valueZat": 1000000000,
+          "valueSat": 1000000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 a93a94488543e2a59ca9b26f65f1be30692d8028 OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a914a93a94488543e2a59ca9b26f65f1be30692d802888ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1ZJQNuop1oytQ7ow4Kq8o9if3astavba5W"
+            ]
+          }
+        },
+        {
+          "value": 2.50000000,
+          "valueZat": 250000000,
+          "valueSat": 250000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_HASH160 e9702e27abc52e441fd979544ecab6b20d045c32 OP_EQUAL",
+            "hex": "a914e9702e27abc52e441fd979544ecab6b20d045c3287",
+            "reqSigs": 1,
+            "type": "scripthash",
+            "addresses": [
+              "t3fqvkzrrNaMcamkQMwAyHRjfDdM2xQvDTR"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ]
+    }
   ],
   "time": 1483931266,
   "nonce": "00000000000000000000000000000000000000000000000006b5aabfc09b8030",
@@ -34,5 +80,6 @@
       "valueDeltaZat": 0
     }
   ],
-  "previousblockhash": "0000000085d6a22d83e8b516085e6c3e7c4790d8b4884911d05aec09a4f4a612"
+  "previousblockhash": "0000000085d6a22d83e8b516085e6c3e7c4790d8b4884911d05aec09a4f4a612",
+  "nextblockhash": "0000000047afa139cb138181d87140bbc7019a7dd8833107090297fef44239bc"
 }

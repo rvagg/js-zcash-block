@@ -1,14 +1,104 @@
 {
   "hash": "000000006c2761ca1bc32454f2609271b55c97ea480d681ddd127b7e81596a8b",
-  "confirmations": 1,
+  "confirmations": 761719,
   "size": 1968,
   "height": 107630,
   "version": 4,
   "merkleroot": "7c9d7f2f5e4e77a8138f8819192ce1597fa5ab68880825899038816e8afe74d9",
   "finalsaplingroot": "0000000000000000000000000000000000000000000000000000000000000000",
+  "chainhistoryroot": "0000000000000000000000000000000000000000000000000000000000000000",
   "tx": [
-    "e11724cd0a8be9cff3bd6e9d96a9fb69423fb485300ac2697fac6f26f22b4795",
-    "38ca7c32875e11bfb7ee79b3e787c26e4ef62ca919cee8e6a17b4c120148be80"
+    {
+      "txid": "e11724cd0a8be9cff3bd6e9d96a9fb69423fb485300ac2697fac6f26f22b4795",
+      "overwintered": false,
+      "version": 1,
+      "locktime": 523021472,
+      "vin": [
+        {
+          "coinbase": "036ea4010fe4b883e5bda9e7a59ee4bb99e9b1bc04f09f909f",
+          "sequence": 1010762806
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00000339,
+          "valueZat": 1000000339,
+          "valueSat": 1000000339,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 b722782e401ed7a31135580ada74962ef32e5cd2 OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a914b722782e401ed7a31135580ada74962ef32e5cd288ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1aZvxRLCGVeMPFXvqfnBgHVEbi4c6g8MVa"
+            ]
+          }
+        },
+        {
+          "value": 2.50000000,
+          "valueZat": 250000000,
+          "valueSat": 250000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_HASH160 b3f6fa632d7303d689678700b0502aa1a927296b OP_EQUAL",
+            "hex": "a914b3f6fa632d7303d689678700b0502aa1a927296b87",
+            "reqSigs": 1,
+            "type": "scripthash",
+            "addresses": [
+              "t3ayBkZ4w6kKXynwoHZFUSSgXRKtogTXNgb"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ]
+    },
+    {
+      "txid": "38ca7c32875e11bfb7ee79b3e787c26e4ef62ca919cee8e6a17b4c120148be80",
+      "overwintered": false,
+      "version": 1,
+      "locktime": 107618,
+      "vin": [
+        {
+          "txid": "5d46a76cf8dc81b63cfa67c1de5c566e91f753455f48a4b1c319c010e35b0981",
+          "vout": 129,
+          "scriptSig": {
+            "asm": "304402203c0b5a39d23e7c06f499695c70398ad9bdf9bc014afe865ea5123444dffa633602205a93c902635790e4797d90fc6c4c6ada87a95955e13061667179d6ca3fd58704[ALL] 03d6da24522dd8b51977dbf3ed4ab89c70818418a80b24b8d09a22f2789e8fac3c",
+            "hex": "47304402203c0b5a39d23e7c06f499695c70398ad9bdf9bc014afe865ea5123444dffa633602205a93c902635790e4797d90fc6c4c6ada87a95955e13061667179d6ca3fd58704012103d6da24522dd8b51977dbf3ed4ab89c70818418a80b24b8d09a22f2789e8fac3c"
+          },
+          "sequence": 4294967294
+        },
+        {
+          "txid": "24aae343affe7513febcf3dddc0e33d16e3f27e04dfc21151086db77f571ee22",
+          "vout": 562,
+          "scriptSig": {
+            "asm": "3044022027eceaaf69d681e371aa7f19938b7a13616e889ce41df89de4ceafe17e79452602206a90450f649d168bb756cb522c457e0a3bdf96873596d335717c594e35701a9b[ALL] 026f783f5698137a24d914cb40795e08d3c5124252bacb7cc3db92b5adb3613958",
+            "hex": "473044022027eceaaf69d681e371aa7f19938b7a13616e889ce41df89de4ceafe17e79452602206a90450f649d168bb756cb522c457e0a3bdf96873596d335717c594e35701a9b0121026f783f5698137a24d914cb40795e08d3c5124252bacb7cc3db92b5adb3613958"
+          },
+          "sequence": 4294967294
+        }
+      ],
+      "vout": [
+        {
+          "value": 0.99970000,
+          "valueZat": 99970000,
+          "valueSat": 99970000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "OP_DUP OP_HASH160 9719cad8f966d215c3f82dd5fa4ddf40173eaf28 OP_EQUALVERIFY OP_CHECKSIG",
+            "hex": "76a9149719cad8f966d215c3f82dd5fa4ddf40173eaf2888ac",
+            "reqSigs": 1,
+            "type": "pubkeyhash",
+            "addresses": [
+              "t1XeYwPRkHKiFYnxN5bY35pFWLqXKaRtiLj"
+            ]
+          }
+        }
+      ],
+      "vjoinsplit": [
+      ]
+    }
   ],
   "time": 1493815269,
   "nonce": "0000000000000000000000000000037200000000000000000000000000000000",
@@ -35,5 +125,6 @@
       "valueDeltaZat": 0
     }
   ],
-  "previousblockhash": "00000000599116738deee04d63933ef9368386996fe944bd0b6661137dff4066"
+  "previousblockhash": "00000000599116738deee04d63933ef9368386996fe944bd0b6661137dff4066",
+  "nextblockhash": "000000007e317096a5efe4d2e1d1819ce22f1e02ff0a8b410dbf130a170c5123"
 }
